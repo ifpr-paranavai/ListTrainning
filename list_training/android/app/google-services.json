@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "591577660072",
+    "project_id": "list-taining",
+    "storage_bucket": "list-taining.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591577660072:android:10cdd46bef0fbbcf3ca09d",
+        "android_client_info": {
+          "package_name": "com.example.list_training"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591577660072-22kqbmet7mu0tv1bm2ql99pg2a36blst.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_hoVLzzGq9ycZXjb8WxgB6DawfkN4oPs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591577660072-22kqbmet7mu0tv1bm2ql99pg2a36blst.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
