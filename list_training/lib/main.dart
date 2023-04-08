@@ -22,10 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Container(
-        alignment: Alignment.center,
-        child: const Text("Hello word"),
-      ),
+      home: Container(),
     );
   }
 }
