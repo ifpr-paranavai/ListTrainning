@@ -1,5 +1,6 @@
-import 'package:list_training/src/model/treino.dart';
-
 class ItensTreino {
-  late Treino treino;
+  dynamic id;
+  late int sequncia;
+  late double peso;
+  late int repeticao;
 }
