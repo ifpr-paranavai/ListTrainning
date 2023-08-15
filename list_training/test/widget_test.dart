@@ -7,24 +7,34 @@
 
 /*import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:list_training/main.dart';
+import 'package:list_training/src/view/components/bottom_navigation.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('BottomNavigationBar items test', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(
+      home: BottomNavigationBarExample(),
+    ));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Encontra o BottomNavigationBar
+    final bottomNavigationBarFinder = find.byType(BottomNavigationBar);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Verifica se o BottomNavigationBar existe
+    expect(bottomNavigationBarFinder, findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verifica o ícone e o rótulo de cada item
+    final paginaHome = find.byIcon(Icons.home);
+    final labelHome = find.text('Home');
+    expect(paginaHome, findsOneWidget);
+    expect(labelHome, findsOneWidget);
+
+    final paginaBusiness = find.byIcon(Icons.business);
+    final labelBusiness = find.text('Business');
+    expect(paginaBusiness, findsOneWidget);
+    expect(labelBusiness, findsOneWidget);
+
+    final paginaPessoa = find.byIcon(Icons.person);
+    final labelPessoa = find.text('Profile');
+    expect(paginaPessoa, findsOneWidget);
+    expect(labelPessoa, findsOneWidget);
   });
 }*/

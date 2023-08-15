@@ -45,26 +45,47 @@ packages:
     dependency: "direct main"
     description:
       name: cloud_firestore
+<<<<<<< HEAD
       sha256: "17b4bac19f367ba1bd84239493a9a4182730221e4780334dd9cd57c4f13eccb7"
       url: "https://pub.dev"
     source: hosted
     version: "4.5.2"
+=======
+      sha256: "5bbc1f5bffa79af54ca035b92b57f81c6fb35ee5471ead67e29c8e12de8432f8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.2"
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
+<<<<<<< HEAD
       sha256: "76ba7b9dd43ce7f07e75a2349f3eb3e2c61e1bea88fec4798c3377cccf44cd7a"
       url: "https://pub.dev"
     source: hosted
     version: "5.12.1"
+=======
+      sha256: "8e0aafeb727087f84710275d59a101b2acf2290ffbb3b111aab70423f8350d5d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.15.2"
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
+<<<<<<< HEAD
       sha256: "0c1305722339e0b3fc0ce62bf6233b3f8762cc105a26af02171b849e6a3b3727"
       url: "https://pub.dev"
     source: hosted
     version: "3.4.2"
+=======
+      sha256: bbf0ebb9d1e9251caa00e8727389313c64cb4240c1c31f895971c52d0c782316
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.2"
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
   collection:
     dependency: transitive
     description:
@@ -137,6 +158,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
+<<<<<<< HEAD
   firebase_database:
     dependency: "direct main"
     description:
@@ -161,6 +183,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2+1"
+=======
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
   flutter:
     dependency: "direct main"
     description: flutter
@@ -192,6 +216,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+<<<<<<< HEAD
   intl:
     dependency: "direct main"
     description:
@@ -200,6 +225,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
+=======
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
   js:
     dependency: transitive
     description:

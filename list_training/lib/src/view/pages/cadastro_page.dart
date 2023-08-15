@@ -16,7 +16,10 @@ class _CadastroPageState extends State<CadastroPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _firebaseAuth = FirebaseAuth.instance;
+<<<<<<< HEAD
   final formKey = GlobalKey<FormState>();
+=======
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
 
   cadastrar() async {
     try {
@@ -76,6 +79,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 controller: _passwordController,
                 retornoValidador: 'retornoValidador'),
             Button(
+<<<<<<< HEAD
               icone: Icon(Icons.one_k),
               rotulo: 'Cadastrar',
               cor: Colors.blue,
@@ -88,6 +92,13 @@ class _CadastroPageState extends State<CadastroPage> {
                 }
               },
             )
+=======
+                icone: Icon(Icons.one_k),
+                rotulo: 'Cadastrar',
+                cor: Colors.blue,
+                borda: StadiumBorder(),
+                acao: cadastrar)
+>>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
           ],
         ));
   }
