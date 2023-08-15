@@ -6,9 +6,9 @@ class PersonalFirebase {
 
   Future addPersonal({required Personal cPersonal}) async {
     final docPersonal = root.doc();
-
+    final doc = docPersonal.collection('personal').doc();
     final personal = Personal(
-            id: docPersonal.id,
+            id: doc.id,
             nome: cPersonal.nome,
             cpf: cPersonal.cpf,
             cref: cPersonal.cref,
@@ -22,7 +22,7 @@ class PersonalFirebase {
             validadeCref: cPersonal.validadeCref)
         .toJson();
 
-    await docPersonal
+    await doc
         .set(personal)
         .then((value) => print('Usuário adicionado com sucesso!'))
         .catchError((error) => print('Erro ao adicionar o usuário: $error'));

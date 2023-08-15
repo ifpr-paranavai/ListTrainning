@@ -21,6 +21,7 @@ class Button extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
+        width: MediaQuery.of(context).size.width / 1.2,
         child: ElevatedButton.icon(
           onPressed: acao,
           icon: icone,

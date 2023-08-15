@@ -44,42 +44,40 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB6Hu9zQpOoat_WcD5Gwj4JE13K4BFdQvY',
-    appId: '1:591577660072:web:31de1b13ff8adb563ca09d',
-    messagingSenderId: '591577660072',
-    projectId: 'list-taining',
-    authDomain: 'list-taining.firebaseapp.com',
-    storageBucket: 'list-taining.appspot.com',
-    measurementId: 'G-R8GFLLEN4T',
+    apiKey: 'AIzaSyBXLtAmAx60V3zU1atVL7rb0P6ApRb4-G0',
+    appId: '1:789995810582:web:81f6f933dfc8722d576a37',
+    messagingSenderId: '789995810582',
+    projectId: 'list-training-20cbc',
+    authDomain: 'list-training-20cbc.firebaseapp.com',
+    storageBucket: 'list-training-20cbc.appspot.com',
+    measurementId: 'G-ZQYTPWN92J',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB_hoVLzzGq9ycZXjb8WxgB6DawfkN4oPs',
-    appId: '1:591577660072:android:10cdd46bef0fbbcf3ca09d',
-    messagingSenderId: '591577660072',
-    projectId: 'list-taining',
-    storageBucket: 'list-taining.appspot.com',
+    apiKey: 'AIzaSyDQu7I7iSDYWcGe7JL9c1cW7pI_hREygGk',
+    appId: '1:789995810582:android:b318ef62d57f2d81576a37',
+    messagingSenderId: '789995810582',
+    projectId: 'list-training-20cbc',
+    storageBucket: 'list-training-20cbc.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAP9fO0JGWFyAZeJ4LkTbEdRMNqohZ6Iig',
-    appId: '1:591577660072:ios:ee694a3f150e800d3ca09d',
-    messagingSenderId: '591577660072',
-    projectId: 'list-taining',
-    storageBucket: 'list-taining.appspot.com',
-    iosClientId:
-        '591577660072-tc9cmtpc4hdbr93oqq5cehia4cpmn9b7.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCaTcySAqW2jDYrNQaoTR8u3U0xJjqJzkc',
+    appId: '1:789995810582:ios:4244a33acc1a27ab576a37',
+    messagingSenderId: '789995810582',
+    projectId: 'list-training-20cbc',
+    storageBucket: 'list-training-20cbc.appspot.com',
+    iosClientId: '789995810582-9d926em7dmhj9rggab1vhn09brs8peok.apps.googleusercontent.com',
     iosBundleId: 'com.example.listTraining',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAP9fO0JGWFyAZeJ4LkTbEdRMNqohZ6Iig',
-    appId: '1:591577660072:ios:ee694a3f150e800d3ca09d',
-    messagingSenderId: '591577660072',
-    projectId: 'list-taining',
-    storageBucket: 'list-taining.appspot.com',
-    iosClientId:
-        '591577660072-tc9cmtpc4hdbr93oqq5cehia4cpmn9b7.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCaTcySAqW2jDYrNQaoTR8u3U0xJjqJzkc',
+    appId: '1:789995810582:ios:4244a33acc1a27ab576a37',
+    messagingSenderId: '789995810582',
+    projectId: 'list-training-20cbc',
+    storageBucket: 'list-training-20cbc.appspot.com',
+    iosClientId: '789995810582-9d926em7dmhj9rggab1vhn09brs8peok.apps.googleusercontent.com',
     iosBundleId: 'com.example.listTraining',
   );
 }

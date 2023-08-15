@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
+import 'package:list_training/src/view/pages/pages_personal/details/personal_detail.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
@@ -18,7 +19,7 @@ class _BottomNavigationBarExampleState
   int _selectedIndex = 0;
 
   static final List<Widget> _pages = <Widget>[
-    Container(),
+    PersonalDetail(),
     Container(),
     Container(),
   ];
@@ -43,7 +44,7 @@ class _BottomNavigationBarExampleState
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Home'),
+        title: const Text('Start Trainining'),
       ),
       body: IndexedStack(
         index: _selectedIndex,
@@ -53,7 +54,7 @@ class _BottomNavigationBarExampleState
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Treinos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.business),
