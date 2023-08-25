@@ -50,9 +50,4 @@ class Personal extends Pessoa {
         telefone: json['telefone'],
         validadeCref: json['validadeCref']);
   }
-<<<<<<< HEAD
-
-  
-=======
->>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
 }

@@ -114,15 +114,11 @@ class _LoginPageState extends State<LoginPage> {
                       cor: Colors.amber,
                       borda: StadiumBorder(),
                       acao: () {
-<<<<<<< HEAD
                         var validar = formeKey.currentState?.validate();
                         if (validar == true) {
                           login();
                           print(1);
                         }
-=======
-                        login();
->>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
                       },
                     ),
                     Spacer(),

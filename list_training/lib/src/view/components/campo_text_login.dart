@@ -46,13 +46,8 @@ class CampoTextoLogin extends StatelessWidget {
           hintText: rotulo,
         ),
         obscureText: visibilidade,
-<<<<<<< HEAD
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-=======
         validator: (String? value) {
           if (controller.text == null || controller.text.isEmpty) {
->>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
             return retornoValidador;
           }
         },

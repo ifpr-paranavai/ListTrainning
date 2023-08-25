@@ -1,11 +1,25 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> 920acd94ca407e4c3b3f967d7b5c29424b0f3816
 import 'package:list_training/src/model/entidades/musculo.dart';
 
 class MusculoTrabalhado {
   dynamic id;
+  dynamic idMusculo;
   late int prioridade;
-  late Musculo musculo;
+
+  MusculoTrabalhado(
+      {this.id, required this.idMusculo, required this.prioridade});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'musculo': idMusculo,
+      'prioridade': prioridade,
+    };
+  }
+
+  static MusculoTrabalhado fromJson(Map<String, dynamic> json) {
+    return MusculoTrabalhado(
+        id: json['id'],
+        idMusculo: json['idMusculo'],
+        prioridade: json['prioridade']);
+  }
 }

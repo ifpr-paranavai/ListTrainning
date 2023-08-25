@@ -1,26 +1,38 @@
-import 'package:list_training/src/model/entidades/aluno.dart';
+import 'package:list_training/src/model/entidades/enum/enum_dia_semana.dart';
 import 'package:list_training/src/model/entidades/personal.dart';
-
-enum DiaSemana {
-  
-  SEGUNDA('Segunda-feira'),
-  TERCA('Terça-feira'),
-  QUARTA('Quarta-feira'),
-  QUINTA('Quinta-feira'),
-  SEXTA('Sexta-feira'),
-  SABADO('Sábado'),
-  DOMINGO('Domingo');
-
-  final String value;
-
-  const DiaSemana(this.value);
-}
 
 class Agenda {
   dynamic id;
+  dynamic idAluno;
+  dynamic idPersonal;
   late DiaSemana diaSemana;
   late DateTime horaInicial;
   late DateTime tempoTreino;
-  late Aluno aluno;
-  late Personal personal;
+
+  Agenda(
+      {this.id,
+      required this.diaSemana,
+      required this.idAluno,
+      required this.horaInicial,
+      required this.idPersonal,
+      required this.tempoTreino});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'diaSemana': diaSemana,
+      'idAluno': idAluno,
+      'horaInicial': horaInicial,
+      'idPersonal': idPersonal,
+      'tempoTreino': tempoTreino
+    };
+  }
+
+  static Agenda fromJson(Map<String, dynamic> json) {
+    return Agenda(
+        diaSemana: json['diaSemana'],
+        idAluno: json['idAluno'],
+        horaInicial: json['horaInicial'],
+        idPersonal: json['idPersonal'],
+        tempoTreino: json['tempoTreino']);
+  }
 }
