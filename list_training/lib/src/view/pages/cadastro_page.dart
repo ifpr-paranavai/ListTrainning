@@ -84,7 +84,6 @@ class _CadastroPageState extends State<CadastroPage> {
                 var validar = formKey.currentState?.validate();
                 if (validar == true) {
                   cadastrar();
-                  print(1);
                 }
               },
             )

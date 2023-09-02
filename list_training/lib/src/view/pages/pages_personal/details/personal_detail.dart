@@ -44,6 +44,7 @@ class _PersonalDetailState extends State<PersonalDetail> {
 
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         // Conteúdo do modal
