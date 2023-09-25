@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:list_training/src/model/entidades/personal.dart';
 
 class PersonalFirebase {
   final root = FirebaseFirestore.instance.collection('personal');
 
   Future addPersonal({required Personal cPersonal}) async {
-    
     final docPersonal = root.doc();
 
     final personal = Personal(
