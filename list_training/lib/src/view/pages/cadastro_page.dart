@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/components/button.dart';
 import 'package:list_training/src/view/components/campo_input.dart';
-import 'package:list_training/src/view/pages/check_page.dart';
 import 'package:list_training/src/view/pages/login_page.dart';
 
 class CadastroPage extends StatefulWidget {
@@ -136,19 +135,19 @@ class _CadastroPageState extends State<CadastroPage> {
                   rotulo: 'Nome',
                   tipo: TextInputType.name,
                   controller: _nomeController,
-                  retornoValidador: 'retornoValidador'),
+                  retornoValidador: 'Prencha o campo'),
               CampoInput(
                   visibilidade: false,
                   rotulo: 'Email',
                   tipo: TextInputType.emailAddress,
                   controller: _emailController,
-                  retornoValidador: 'retornoValidador'),
+                  retornoValidador: 'Prencha o campo'),
               CampoInput(
                   visibilidade: false,
                   rotulo: 'Senha',
                   tipo: TextInputType.visiblePassword,
                   controller: _passwordController,
-                  retornoValidador: 'retornoValidador'),
+                  retornoValidador: 'Prencha o campo'),
               Button(
                 icone: const Icon(Icons.one_k),
                 rotulo: 'Cadastrar',

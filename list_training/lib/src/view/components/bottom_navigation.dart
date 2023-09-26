@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
 import 'package:list_training/src/view/pages/home_page.dart';
+import 'package:list_training/src/view/pages/pages_aluno/minha_agenda.dart';
 import 'package:list_training/src/view/pages/pages_personal/details/personal_detail.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
@@ -16,7 +17,7 @@ class BottomNavigationBarExample extends StatefulWidget {
 
 class _BottomNavigationBarExampleState
     extends State<BottomNavigationBarExample> {
-  final _firebaseAuth = FirebaseAuth.instance;
+
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -25,23 +26,14 @@ class _BottomNavigationBarExampleState
     });
   }
 
-  void logout() async {
-    await _firebaseAuth.signOut().then((user) => Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CheckPage(),
-          ),
-        ));
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = <Widget>[
       HomePage(),
       PersonalDetail(),
-      Container(
-        child: TextButton(onPressed: () {logout();}, child: Text('Sair')),
-      ),
+      MinhaAgenda()
     ];
 
     return Scaffold(

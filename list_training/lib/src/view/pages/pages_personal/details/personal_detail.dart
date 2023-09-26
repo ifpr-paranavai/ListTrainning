@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:list_training/src/model/entidades/personal.dart';
 import 'package:list_training/src/model/firebase/personal_firebase.dart';
 import 'package:list_training/src/view/components/campo_input.dart';
+import 'package:list_training/src/view/components/drawer.dart';
 
 class PersonalDetail extends StatefulWidget {
   const PersonalDetail({super.key});
@@ -29,6 +30,8 @@ class _PersonalDetailState extends State<PersonalDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
+      drawer: DrawerExample(),
       body: Center(
         child: ListView(children: [
           FloatingActionButton(
