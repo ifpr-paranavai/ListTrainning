@@ -27,4 +27,7 @@ class PersonalFirebase {
         .then((value) => print('Usuário adicionado com sucesso!'))
         .catchError((error) => print('Erro ao adicionar o usuário: $error'));
   }
+
+
+  
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:list_training/src/view/components/drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,8 +14,38 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        drawer: DrawerExample(),
-        body: Container(),
+        drawer: const DrawerExample(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                color: Colors.amber,
+                height: 100,
+                
+                child: Text('Treinos'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      color: Colors.black,
+                      width: MediaQuery.of(context).size.width / 3,
+                      height: 100,
+                    ),
+                    Spacer(),
+                    Container(
+                      color: Colors.orange,
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      height: 100,
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

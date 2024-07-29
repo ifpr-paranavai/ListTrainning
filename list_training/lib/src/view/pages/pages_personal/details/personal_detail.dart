@@ -27,20 +27,38 @@ class _PersonalDetailState extends State<PersonalDetail> {
   PersonalFirebase personalFirebase = PersonalFirebase();
   DateFormat format = DateFormat('dd/MM/yyyy');
   String retornoValidador = 'Campo obrigatório';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       drawer: DrawerExample(),
       body: Center(
-        child: ListView(children: [
-          FloatingActionButton(
-            onPressed: () {
-              _showModalBottomSheet(context);
-            },
-            child: Text('Cadastrar Personal'),
-          )
-        ]),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                children: [
+                  Center(
+                    child: Text(
+                      'Lista de Personais',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),
+                  // Aqui você pode adicionar um StreamBuilder ou FutureBuilder para listar os personais
+                ],
+              ),
+            ),
+            SizedBox(height: 16), // Espaçamento antes do botão
+            FloatingActionButton(
+              onPressed: () {
+                _showModalBottomSheet(context);
+              },
+              child: Icon(Icons.add),
+            ),
+            SizedBox(height: 32), // Espaçamento adicional antes do fim da tela
+          ],
+        ),
       ),
     );
   }
@@ -50,118 +68,129 @@ class _PersonalDetailState extends State<PersonalDetail> {
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
-        // Conteúdo do modal
-        return formPersonal();
+        return DraggableScrollableSheet(
+          expand: false,
+          builder: (_, controller) {
+            return SingleChildScrollView(
+              controller: controller,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: formPersonal(),
+              ),
+            );
+          },
+        );
       },
     );
   }
 
   Widget formPersonal() {
-    return Scaffold(
-      body: Center(
-        child: Form(
-          child: ListView(
-            children: [
-              const SizedBox(
-                child: Center(
-                  child: Text(
-                    'Cadastro de Personal',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                ),
+    return Form(
+      child: Column(
+        mainAxisSize:
+            MainAxisSize.min, // Ajusta a altura da coluna ao mínimo necessário
+        children: [
+          const SizedBox(
+            height: 50, // Definindo altura para o cabeçalho
+            child: Center(
+              child: Text(
+                'Cadastro de Personal',
+                style: TextStyle(fontSize: 30),
               ),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Nome',
-                  tipo: TextInputType.name,
-                  controller: _nomeController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'CPF',
-                  tipo: TextInputType.number,
-                  controller: _cpfController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Data Nascimento',
-                  tipo: TextInputType.datetime,
-                  controller: _dataNascimentoController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Cref',
-                  tipo: TextInputType.number,
-                  controller: _crefController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Email',
-                  tipo: TextInputType.emailAddress,
-                  controller: _emailController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Senha',
-                  tipo: TextInputType.visiblePassword,
-                  controller: _passwordController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Endereço',
-                  tipo: TextInputType.text,
-                  controller: _enderecoController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Status',
-                  tipo: TextInputType.text,
-                  controller: _statusController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Telefone',
-                  tipo: TextInputType.number,
-                  controller: _telefoneController,
-                  retornoValidador: retornoValidador),
-              CampoInput(
-                  visibilidade: false,
-                  rotulo: 'Validade Cref',
-                  tipo: TextInputType.datetime,
-                  controller: _validadeCrefController,
-                  retornoValidador: retornoValidador),
-              SizedBox(
-                  width: 30,
-                  child: TextButton(
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_task_rounded),
-                        Text('Salvar'),
-                      ],
-                    ),
-                    onPressed: () {
-                      personalFirebase.addPersonal(
-                          cPersonal: Personal(
-                        cpf: _cpfController.text,
-                        cref: _crefController.text,
-                        dataNascimento:
-                            format.parse(_dataNascimentoController.text),
-                        email: _emailController.text,
-                        endereco: _enderecoController.text,
-                        nome: _nomeController.text,
-                        senha: _passwordController.text,
-                        status: _statusController.text,
-                        telefone: _telefoneController.text,
-                        validadeCref:
-                            format.parse(_validadeCrefController.text),
-                      ));
-                      Navigator.pop(context);
-                    },
-                  ))
-            ],
+            ),
           ),
-        ),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Nome',
+              tipo: TextInputType.name,
+              controller: _nomeController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'CPF',
+              tipo: TextInputType.number,
+              controller: _cpfController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Data Nascimento',
+              tipo: TextInputType.datetime,
+              controller: _dataNascimentoController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Cref',
+              tipo: TextInputType.number,
+              controller: _crefController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Email',
+              tipo: TextInputType.emailAddress,
+              controller: _emailController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Senha',
+              tipo: TextInputType.visiblePassword,
+              controller: _passwordController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Endereço',
+              tipo: TextInputType.text,
+              controller: _enderecoController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Status',
+              tipo: TextInputType.text,
+              controller: _statusController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Telefone',
+              tipo: TextInputType.number,
+              controller: _telefoneController,
+              retornoValidador: retornoValidador),
+          CampoInput(
+              visibilidade: false,
+              rotulo: 'Validade Cref',
+              tipo: TextInputType.datetime,
+              controller: _validadeCrefController,
+              retornoValidador: retornoValidador),
+          SizedBox(
+            height: 50, // Definindo altura para o botão
+            child: ElevatedButton(
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_task_rounded),
+                  SizedBox(width: 8), // Espaçamento entre ícone e texto
+                  Text('Salvar'),
+                ],
+              ),
+              onPressed: () {
+                personalFirebase.addPersonal(
+                  cPersonal: Personal(
+                    cpf: _cpfController.text,
+                    cref: _crefController.text,
+                    dataNascimento:
+                        format.parse(_dataNascimentoController.text),
+                    email: _emailController.text,
+                    endereco: _enderecoController.text,
+                    nome: _nomeController.text,
+                    senha: _passwordController.text,
+                    status: _statusController.text,
+                    telefone: _telefoneController.text,
+                    validadeCref: format.parse(_validadeCrefController.text),
+                  ),
+                );
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

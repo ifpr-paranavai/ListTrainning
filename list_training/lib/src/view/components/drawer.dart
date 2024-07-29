@@ -1,18 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
+import 'package:list_training/src/view/pages/exercicio/exercicio_detail.dart';
 
-class DrawerExample extends StatelessWidget {
+class DrawerExample extends StatefulWidget {
   const DrawerExample({super.key});
 
   @override
+  State<DrawerExample> createState() => _DrawerExampleState();
+}
+
+class _DrawerExampleState extends State<DrawerExample> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
+  Future<void> _getUserData() async {
+    final user = _auth.currentUser;
+    setState(() {
+      _user = user;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final _firebaseAuth = FirebaseAuth.instance;
+    final firebaseAuth = FirebaseAuth.instance;
     void logout() async {
-      await _firebaseAuth.signOut().then((user) => Navigator.pushReplacement(
+      await firebaseAuth.signOut().then((user) => Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => CheckPage(),
+              builder: (context) => const CheckPage(),
             ),
           ));
     }
@@ -20,18 +41,43 @@ class DrawerExample extends StatelessWidget {
     return Drawer(
       child: Container(
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(),
-              Container(
-                alignment: Alignment.bottomCenter,
-                child: TextButton(
-                    onPressed: () {
-                      logout();
-                    },
-                    child: Text('Sair')),
-              )
-            ]),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                        'Nome de Usuário: ${_user!.displayName ?? 'Não disponível'}'),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ExercicioDetail(),
+                    ),
+                  );
+                },
+                child: const Text('Cadastro Exerxixios'),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: TextButton(
+                onPressed: () {
+                  logout();
+                },
+                child: const Text('Sair'),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -17,7 +17,6 @@ class BottomNavigationBarExample extends StatefulWidget {
 
 class _BottomNavigationBarExampleState
     extends State<BottomNavigationBarExample> {
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -25,8 +24,6 @@ class _BottomNavigationBarExampleState
       _selectedIndex = index;
     });
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
