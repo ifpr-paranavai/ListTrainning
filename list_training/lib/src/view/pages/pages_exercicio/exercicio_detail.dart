@@ -23,9 +23,16 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Start Trainining'),
+        title: const Text('ListTraining'),
       ),
-      drawer: DrawerExample(),
+      drawer: SafeArea(
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - kToolbarHeight,
+          ),
+          child: DrawerExample(),
+        ),
+      ),
       body: Center(
         child: Column(
           children: [
@@ -35,36 +42,46 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Exercicio>> snapshot) {
                   if (snapshot.hasError) {
-                    return Center(child: Text("Algo deu errado"));
+                    return const Center(child: Text("Algo deu errado"));
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text("Nenhum exercício encontrado"));
+                    return const Center(
+                        child: Text("Nenhum exercício encontrado"));
                   }
 
+                  // Ordenando os exercícios por nome em ordem alfabética
+                  final exerciciosOrdenados = snapshot.data!
+                    ..sort((a, b) => a.nome.compareTo(b.nome));
+
                   return ListView(
-                    children: snapshot.data!.map((Exercicio exercicio) {
-                      return ListTile(
-                        title: Text(exercicio.nome),
-                        subtitle: Text(exercicio.descricao.toString()),
+                    children: exerciciosOrdenados.map((Exercicio exercicio) {
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        child: ListTile(
+                          title: Text(exercicio.nome),
+                          subtitle: Text(exercicio.descricao.toString()),
+                        ),
                       );
                     }).toList(),
                   );
                 },
               ),
             ),
-            SizedBox(height: 16), // Espaçamento antes do botão
+            const SizedBox(height: 16), // Espaçamento antes do botão
             FloatingActionButton(
               onPressed: () {
                 _showModalBottomSheet(context);
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
-            SizedBox(height: 32), // Espaçamento adicional antes do fim da tela
+            const SizedBox(
+                height: 32), // Espaçamento adicional antes do fim da tela
           ],
         ),
       ),
@@ -133,11 +150,12 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                 ],
               ),
               onPressed: () {
-                exercicioFirebase.addTreino(
+                exercicioFirebase.addExercicio(
                   cExercicio: Exercicio(
                     nome: _nomeController.text,
                     descricao: _descricaoController.text,
                     urlExplicao: _urlExplicacaoController.text,
+                    idGrupoMuscular: 1
                   ),
                 );
                 Navigator.pop(context);

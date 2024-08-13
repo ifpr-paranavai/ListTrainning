@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
 import 'package:list_training/src/view/pages/home_page.dart';
 import 'package:list_training/src/view/pages/pages_aluno/minha_agenda.dart';
-import 'package:list_training/src/view/pages/pages_personal/details/personal_detail.dart';
+import 'package:list_training/src/view/pages/pages_personal/personal_detail.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
@@ -36,7 +36,7 @@ class _BottomNavigationBarExampleState
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Start Trainining'),
+        title: const Text('ListTraining'),
       ),
       body: IndexedStack(
         index: _selectedIndex,

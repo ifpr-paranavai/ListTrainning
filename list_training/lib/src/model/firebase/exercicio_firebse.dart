@@ -5,7 +5,7 @@ import '../entidades/exercicio.dart';
 class ExercicioFirebase {
   final root = FirebaseFirestore.instance.collection('exercicio');
 
-  Future addTreino({required Exercicio cExercicio}) async {
+  Future addExercicio({required Exercicio cExercicio}) async {
     final docExercicio = root.doc();
 
     final exercicio = Exercicio(
@@ -13,6 +13,7 @@ class ExercicioFirebase {
       nome: cExercicio.nome,
       descricao: cExercicio.descricao,
       urlExplicao: cExercicio.urlExplicao,
+      idGrupoMuscular: cExercicio.idGrupoMuscular
     ).toJson();
 
     await docExercicio

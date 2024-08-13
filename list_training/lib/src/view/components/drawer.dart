@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
-import 'package:list_training/src/view/pages/exercicio/exercicio_detail.dart';
+import 'package:list_training/src/view/pages/pages_exercicio/exercicio_detail.dart';
 
 class DrawerExample extends StatefulWidget {
   const DrawerExample({super.key});
@@ -64,7 +64,21 @@ class _DrawerExampleState extends State<DrawerExample> {
                     ),
                   );
                 },
-                child: const Text('Cadastro Exerxixios'),
+                child: const Text('Exercicios'),
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ExercicioDetail(),
+                    ),
+                  );
+                },
+                child: const Text('Grupo Muscular'),
               ),
             ),
             Container(

@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Start Training',
+      title: 'ListTrainig',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         useMaterial3: true,
