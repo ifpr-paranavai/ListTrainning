@@ -1,14 +1,16 @@
 class ItensTreino {
   dynamic id;
   dynamic idExercicio;
+  dynamic idTreino;
   late int sequncia;
   late double peso;
   late int repeticao;
 
   ItensTreino(
       {this.id,
-      required this.peso,
       required this.idExercicio,
+      required this.idTreino,
+      required this.peso,
       required this.repeticao,
       required this.sequncia});
   Map<String, dynamic> toJson() {
@@ -24,8 +26,9 @@ class ItensTreino {
   static ItensTreino fromJson(Map<String, dynamic> json) {
     return ItensTreino(
         id: json['id'],
-        peso: json['peso'],
         idExercicio: json['idExercicio'],
+        idTreino: json['idExercicio'],
+        peso: json['peso'],
         repeticao: json['repeticao'],
         sequncia: json['sequncia']);
   }

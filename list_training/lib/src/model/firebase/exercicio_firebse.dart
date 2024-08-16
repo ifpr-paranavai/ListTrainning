@@ -18,8 +18,8 @@ class ExercicioFirebase {
 
     await docExercicio
         .set(exercicio)
-        .then((value) => print('Exerxixio cadastrado com sucesso'))
-        .catchError((error) => print('Erro ao adicionar exerxixio: $error'));
+        .then((value) => print('Exercicio cadastrado com sucesso'))
+        .catchError((error) => print('Erro ao adicionar exercicio: $error'));
   }
 
   Stream<List<Exercicio>> readExercicios() {

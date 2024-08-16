@@ -183,48 +183,59 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
   }
 
   // Função separada para construir o DropdownButton
-  Widget buildGrupoMuscularDropdown() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: 300, // Garantindo a mesma largura do CampoInput
-        child: StreamBuilder<List<GrupoMuscular>>(
-          stream: grupoMuscularFirebase.readGruposMusculares(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const CircularProgressIndicator();
-            }
+Widget buildGrupoMuscularDropdown() {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: SizedBox(
+      width: 300, // Garantindo a mesma largura do CampoInput
+      child: StreamBuilder<List<GrupoMuscular>>(
+        stream: grupoMuscularFirebase.readGruposMusculares(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          }
 
-            return DropdownButtonFormField<GrupoMuscular>(
-              value: _grupoMuscularSelecionado,
-              hint: const Text('Selecione um grupo muscular'),
-              decoration: InputDecoration(
-                label: const Text('Grupo Muscular'),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
+          List<GrupoMuscular> gruposMusculares = snapshot.data!;
+
+          // Verifique se o valor atual (selectedGrupo) existe na lista
+          GrupoMuscular? selectedGrupo = _grupoMuscularSelecionado;
+
+          if (selectedGrupo != null &&
+              !gruposMusculares.any((grupo) => grupo == selectedGrupo)) {
+            selectedGrupo = null; // Reseta o valor se ele não existir na lista
+          }
+
+          return DropdownButtonFormField<GrupoMuscular>(
+            value: selectedGrupo,
+            hint: const Text('Selecione um grupo muscular'),
+            decoration: InputDecoration(
+              label: const Text('Grupo Muscular'),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
               ),
-              items: snapshot.data!.map((grupo) {
-                return DropdownMenuItem<GrupoMuscular>(
-                  value: grupo,
-                  child: Text(grupo.nome),
-                );
-              }).toList(),
-              onChanged: (GrupoMuscular? novoGrupo) {
-                setState(() {
-                  _grupoMuscularSelecionado = novoGrupo;
-                });
-              },
-              validator: (GrupoMuscular? value) {
-                if (value == null) {
-                  return 'Campo obrigatório';
-                }
-                return null;
-              },
-            );
-          },
-        ),
+            ),
+            items: gruposMusculares.map((grupo) {
+              return DropdownMenuItem<GrupoMuscular>(
+                value: grupo,
+                child: Text(grupo.nome),
+              );
+            }).toList(),
+            onChanged: (GrupoMuscular? novoGrupo) {
+              setState(() {
+                _grupoMuscularSelecionado = novoGrupo;
+              });
+            },
+            validator: (GrupoMuscular? value) {
+              if (value == null) {
+                return 'Campo obrigatório';
+              }
+              return null;
+            },
+          );
+        },
       ),
-    );
-  }
+    ),
+  );
+}
+
 }

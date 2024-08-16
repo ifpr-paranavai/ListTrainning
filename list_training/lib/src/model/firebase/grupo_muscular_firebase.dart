@@ -8,7 +8,7 @@ class GrupoMuscularFirebase {
     final docGrupoMuscular = root.doc();
 
     final grupoMuscular = GrupoMuscular(
-      id: cGrupoMuscular.id,
+      id: docGrupoMuscular.id,
       nome: cGrupoMuscular.nome,
       descricao: cGrupoMuscular.descricao,
     ).toJson();
