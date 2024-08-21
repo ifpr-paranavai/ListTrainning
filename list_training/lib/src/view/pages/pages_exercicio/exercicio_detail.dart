@@ -24,6 +24,22 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
   // Variável para armazenar o grupo muscular selecionado
   GrupoMuscular? _grupoMuscularSelecionado;
 
+  // Variável para armazenar os grupos musculares carregados
+  List<GrupoMuscular>? _gruposMusculares;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Carrega os dados do Stream uma vez no initState
+    grupoMuscularFirebase.readGruposMusculares().listen((grupos) {
+      setState(() {
+        _gruposMusculares = grupos;
+        _isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +142,7 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
               ),
             ),
           ),
-          buildGrupoMuscularDropdown(), // Adicionando o Dropdown ao formulário
+          dropdownGrupoMuscular(), // Adicionando o Dropdown ao formulário
           CampoInput(
               visibilidade: false,
               rotulo: 'Nome',
@@ -145,6 +161,7 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
               tipo: TextInputType.url,
               controller: _urlExplicacaoController,
               retornoValidador: retornoValidador),
+
           SizedBox(
             height: 50, // Definindo altura para o botão
             child: ElevatedButton(
@@ -174,6 +191,14 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                     ),
                   );
                 }
+
+                // Limpar os campos do formulário
+                _nomeController.clear();
+                _descricaoController.clear();
+                _urlExplicacaoController.clear();
+                setState(() {
+                  _grupoMuscularSelecionado = null;
+                });
               },
             ),
           ),
@@ -182,60 +207,45 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
     );
   }
 
-  // Função separada para construir o DropdownButton
-Widget buildGrupoMuscularDropdown() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: SizedBox(
-      width: 300, // Garantindo a mesma largura do CampoInput
-      child: StreamBuilder<List<GrupoMuscular>>(
-        stream: grupoMuscularFirebase.readGruposMusculares(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          }
+  // Função para construir o DropdownButton
+  Widget dropdownGrupoMuscular() {
+    if (_isLoading) {
+      return const CircularProgressIndicator(); // Indicador de carregamento
+    }
 
-          List<GrupoMuscular> gruposMusculares = snapshot.data!;
-
-          // Verifique se o valor atual (selectedGrupo) existe na lista
-          GrupoMuscular? selectedGrupo = _grupoMuscularSelecionado;
-
-          if (selectedGrupo != null &&
-              !gruposMusculares.any((grupo) => grupo == selectedGrupo)) {
-            selectedGrupo = null; // Reseta o valor se ele não existir na lista
-          }
-
-          return DropdownButtonFormField<GrupoMuscular>(
-            value: selectedGrupo,
-            hint: const Text('Selecione um grupo muscular'),
-            decoration: InputDecoration(
-              label: const Text('Grupo Muscular'),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            items: gruposMusculares.map((grupo) {
-              return DropdownMenuItem<GrupoMuscular>(
-                value: grupo,
-                child: Text(grupo.nome),
-              );
-            }).toList(),
-            onChanged: (GrupoMuscular? novoGrupo) {
-              setState(() {
-                _grupoMuscularSelecionado = novoGrupo;
-              });
-            },
-            validator: (GrupoMuscular? value) {
-              if (value == null) {
-                return 'Campo obrigatório';
-              }
-              return null;
-            },
+    return SizedBox(
+      width: 300,
+      height: 100,
+      child: DropdownButtonFormField<GrupoMuscular>(
+        isExpanded: true,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        hint: Text(
+            _grupoMuscularSelecionado?.nome ?? 'Selecione um grupo muscular'),
+        items: _gruposMusculares!
+            .map<DropdownMenuItem<GrupoMuscular>>((GrupoMuscular grupo) {
+          return DropdownMenuItem<GrupoMuscular>(
+            value: grupo,
+            child: Text(grupo.nome),
           );
+        }).toList(),
+        value: _grupoMuscularSelecionado, // Define o valor selecionado
+        onChanged: (GrupoMuscular? novoGrupo) {
+          setState(() {
+            _grupoMuscularSelecionado =
+                novoGrupo; // Atualiza o valor selecionado
+          });
+        },
+        validator: (GrupoMuscular? value) {
+          if (value == null) {
+            return 'Campo obrigatório'; // Validação do campo
+          }
+          return null;
         },
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

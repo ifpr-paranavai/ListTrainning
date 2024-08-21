@@ -26,4 +26,12 @@ class GrupoMuscularFirebase {
           return GrupoMuscular.fromJson(data);
         }).toList());
   }
+
+  Future<List<GrupoMuscular>> readGruposMuscularesFuture() async {
+    final snapshot = await root.get();
+    return snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return GrupoMuscular.fromJson(data);
+    }).toList();
+  }
 }
