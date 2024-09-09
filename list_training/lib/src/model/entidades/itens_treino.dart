@@ -1,7 +1,6 @@
 class ItensTreino {
   dynamic id;
   dynamic idExercicio;
-  dynamic idTreino;
   late int sequncia;
   late double peso;
   late int repeticao;
@@ -9,7 +8,6 @@ class ItensTreino {
   ItensTreino(
       {this.id,
       required this.idExercicio,
-      required this.idTreino,
       required this.peso,
       required this.repeticao,
       required this.sequncia});
@@ -27,7 +25,6 @@ class ItensTreino {
     return ItensTreino(
         id: json['id'],
         idExercicio: json['idExercicio'],
-        idTreino: json['idExercicio'],
         peso: json['peso'],
         repeticao: json['repeticao'],
         sequncia: json['sequncia']);

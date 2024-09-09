@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
 import 'package:list_training/src/view/pages/pages_exercicio/exercicio_detail.dart';
 import 'package:list_training/src/view/pages/pages_grupo_muscular/gupo_muscular_detail.dart';
+import 'package:list_training/src/view/pages/pages_treino/treino_detail.dart';
 
 class DrawerExample extends StatefulWidget {
   const DrawerExample({super.key});
@@ -52,6 +53,20 @@ class _DrawerExampleState extends State<DrawerExample> {
                         'Nome de Usuário: ${_user!.displayName ?? 'Não disponível'}'),
                   )
                 ],
+              ),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TreinoDetail(),
+                    ),
+                  );
+                },
+                child: const Text('Treinos'),
               ),
             ),
             Container(

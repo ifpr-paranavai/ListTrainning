@@ -67,6 +67,23 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
                         child: ListTile(
                           title: Text(grupoMuscular.nome),
                           subtitle: Text(grupoMuscular.id.toString()),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  _showEditModal(context, grupoMuscular);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _confirmDelete(context, grupoMuscular.id);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),
@@ -74,21 +91,21 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
                 },
               ),
             ),
-            const SizedBox(height: 16), // Espaçamento antes do botão
+            const SizedBox(height: 16),
             FloatingActionButton(
               onPressed: () {
                 _showModalBottomSheet(context);
               },
               child: const Icon(Icons.add),
             ),
-            const SizedBox(
-                height: 32), // Espaçamento adicional antes do fim da tela
+            const SizedBox(height: 32),
           ],
         ),
       ),
     );
   }
 
+  // Modal para adicionar ou editar um grupo muscular
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -106,14 +123,120 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
     );
   }
 
+  // Função para abrir modal de edição
+  void _showEditModal(BuildContext context, GrupoMuscular grupoMuscular) {
+    _nomeController.text = grupoMuscular.nome;
+    _descricaoController.text = grupoMuscular.descricao ?? '';
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Editar Grupo Muscular',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  CampoInput(
+                      visibilidade: false,
+                      rotulo: 'Nome',
+                      tipo: TextInputType.name,
+                      controller: _nomeController,
+                      retornoValidador: retornoValidador),
+                  CampoInput(
+                      visibilidade: false,
+                      rotulo: 'Descrição',
+                      tipo: TextInputType.text,
+                      controller: _descricaoController,
+                      retornoValidador: retornoValidador),
+                  ElevatedButton(
+                    child: const Text('Salvar'),
+                    onPressed: () {
+                      grupoMuscularFirebase.updateGrupoMuscular(
+                        id: grupoMuscular.id,
+                        nome: _nomeController.text,
+                        descricao: _descricaoController.text,
+                      );
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Função para exibir diálogo de confirmação para deletar
+  void _confirmDelete(BuildContext context, String id) async {
+    bool isLinked = await grupoMuscularFirebase.isGrupoMuscularLinked(id);
+
+    if (isLinked) {
+      // Exibe mensagem de erro se o grupo muscular estiver vinculado a um exercício
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Erro'),
+            content: const Text(
+                'Este grupo muscular está vinculado a um exercício e não pode ser excluído.'),
+            actions: [
+              TextButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Exibe diálogo de confirmação para exclusão
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Confirmar Exclusão'),
+            content: const Text(
+                'Tem certeza que deseja deletar este grupo muscular?'),
+            actions: [
+              TextButton(
+                child: const Text('Cancelar'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              TextButton(
+                child: const Text('Excluir'),
+                onPressed: () {
+                  grupoMuscularFirebase.deleteGrupoMuscular(id: id);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  // Formulário para adicionar novo grupo muscular
   Widget formGrupoMuscular() {
     return Form(
       child: Column(
-        mainAxisSize:
-            MainAxisSize.min, // Ajusta a altura da coluna ao mínimo necessário
+        mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(
-            height: 50, // Definindo altura para o cabeçalho
+            height: 50,
             child: Center(
               child: Text(
                 'Cadastro de Grupo Muscular',
@@ -134,13 +257,13 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
               controller: _descricaoController,
               retornoValidador: retornoValidador),
           SizedBox(
-            height: 50, // Definindo altura para o botão
+            height: 50,
             child: ElevatedButton(
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.add_task_rounded),
-                  SizedBox(width: 8), // Espaçamento entre ícone e texto
+                  SizedBox(width: 8),
                   Text('Salvar'),
                 ],
               ),
@@ -150,6 +273,7 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
                       nome: _nomeController.text,
                       descricao: _descricaoController.text),
                 );
+                Navigator.pop(context);
               },
             ),
           ),

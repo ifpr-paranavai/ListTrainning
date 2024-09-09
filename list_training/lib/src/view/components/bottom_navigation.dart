@@ -5,6 +5,8 @@ import 'package:list_training/src/view/pages/home_page.dart';
 import 'package:list_training/src/view/pages/pages_aluno/minha_agenda.dart';
 import 'package:list_training/src/view/pages/pages_personal/personal_detail.dart';
 
+import '../pages/pages_treino/treino_detail.dart';
+
 /// Flutter code sample for [BottomNavigationBar].
 
 class BottomNavigationBarExample extends StatefulWidget {
@@ -30,7 +32,7 @@ class _BottomNavigationBarExampleState
     final List<Widget> _pages = <Widget>[
       HomePage(),
       PersonalDetail(),
-      MinhaAgenda()
+      TreinoDetail(),
     ];
 
     return Scaffold(

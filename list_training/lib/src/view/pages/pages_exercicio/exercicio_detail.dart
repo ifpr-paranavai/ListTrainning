@@ -88,6 +88,25 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                         child: ListTile(
                           title: Text(exercicio.nome),
                           subtitle: Text(exercicio.descricao.toString()),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  _showEditModal(context, exercicio);
+                                },
+                              ),
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  _confirmDelete(context, exercicio.id);
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),
@@ -110,6 +129,7 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
     );
   }
 
+  // Mostra modal para adicionar novo exercício
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -127,7 +147,63 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
     );
   }
 
-  Widget formExercicio() {
+  // Mostra modal para editar exercício existente
+  void _showEditModal(BuildContext context, Exercicio exercicio) {
+    // Preencher os campos com os dados do exercício para edição
+    _nomeController.text = exercicio.nome;
+    _descricaoController.text = exercicio.descricao ?? '';
+    _urlExplicacaoController.text = exercicio.urlExplicao ?? '';
+
+    // Encontrar o grupo muscular associado ao exercício
+    _grupoMuscularSelecionado = _gruposMusculares?.firstWhere(
+            (grupo) => grupo.id == exercicio.idGrupoMuscular,
+            orElse: () => GrupoMuscular(id: '', nome: '')) ??
+        null;
+
+    // Exibir o modal de edição
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: formExercicio(isEdit: true), // Passando modo de edição
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Confirmação para excluir um exercício
+  void _confirmDelete(BuildContext context, String exercicioId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Confirmar Exclusão"),
+          content: const Text("Tem certeza que deseja excluir este exercício?"),
+          actions: [
+            TextButton(
+              child: const Text("Cancelar"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text("Excluir"),
+              onPressed: () {
+                exercicioFirebase.deleteExercicioById(exercicioId);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget formExercicio({bool isEdit = false, String? exercicioId}) {
     return Form(
       child: Column(
         mainAxisSize:
@@ -142,7 +218,8 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
               ),
             ),
           ),
-          dropdownGrupoMuscular(), // Adicionando o Dropdown ao formulário
+          if (!isEdit)
+            dropdownGrupoMuscular(), // Só mostra o dropdown se não for edição
           CampoInput(
               visibilidade: false,
               rotulo: 'Nome',
@@ -175,14 +252,29 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
               ),
               onPressed: () {
                 if (_grupoMuscularSelecionado != null) {
-                  exercicioFirebase.addExercicio(
-                    cExercicio: Exercicio(
-                      nome: _nomeController.text,
-                      descricao: _descricaoController.text,
-                      urlExplicao: _urlExplicacaoController.text,
-                      idGrupoMuscular: _grupoMuscularSelecionado!.id,
-                    ),
-                  );
+                  if (isEdit && exercicioId != null) {
+                    // Atualizar o exercício existente
+                    exercicioFirebase.updateExercicio(
+                      id: exercicioId,
+                      cExercicio: Exercicio(
+                        id: exercicioId,
+                        nome: _nomeController.text,
+                        descricao: _descricaoController.text,
+                        urlExplicao: _urlExplicacaoController.text,
+                        idGrupoMuscular: _grupoMuscularSelecionado!.id,
+                      ),
+                    );
+                  } else {
+                    // Adicionar um novo exercício
+                    exercicioFirebase.addExercicio(
+                      cExercicio: Exercicio(
+                        nome: _nomeController.text,
+                        descricao: _descricaoController.text,
+                        urlExplicao: _urlExplicacaoController.text,
+                        idGrupoMuscular: _grupoMuscularSelecionado!.id,
+                      ),
+                    );
+                  }
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -196,9 +288,11 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                 _nomeController.clear();
                 _descricaoController.clear();
                 _urlExplicacaoController.clear();
-                setState(() {
-                  _grupoMuscularSelecionado = null;
-                });
+                setState(
+                  () {
+                    _grupoMuscularSelecionado = null;
+                  },
+                );
               },
             ),
           ),
