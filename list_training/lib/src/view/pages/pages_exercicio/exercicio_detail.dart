@@ -86,7 +86,9 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
-                          title: Text(exercicio.nome),
+                          title: Text(exercicio.nome,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                           subtitle: Text(exercicio.descricao.toString()),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,

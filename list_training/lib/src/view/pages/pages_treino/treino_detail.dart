@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:list_training/src/model/firebase/treino_firebase.dart';
 import 'package:list_training/src/model/entidades/treino.dart';
 import 'package:list_training/src/view/components/campo_input.dart';
+import 'package:list_training/src/view/pages/home_page.dart';
 
 class TreinoDetail extends StatefulWidget {
   const TreinoDetail({super.key});
@@ -50,29 +52,34 @@ class _TreinoDetailState extends State<TreinoDetail> {
 
                   return ListView(
                     children: treinosOrdenados.map((Treino treino) {
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: ListTile(
-                          title: Text(treino
-                              .idFichaTreino), // Exibe o ID da ficha de treino
-                          subtitle: Text('Validade: ${treino.validade}'),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  _showEditModal(context, treino);
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  _confirmDelete(context, treino.id);
-                                },
-                              ),
-                            ],
+                      return InkWell(
+                        onTap: () {
+                          // Navegar para a tela de exercícios, passando o treino como parâmetro
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()
+                                //ExerciciosPage(treino: treino),
+                                ),
+                          );
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  treino.nome,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                    'Data de Cadastro: ${treino.dataCadastro}'),
+                                Text('Validade: ${treino.validade}'),
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -157,7 +164,8 @@ class _TreinoDetailState extends State<TreinoDetail> {
                 treinoFirebase.addTreinoParaUsuarioLogado(
                   cTreino: Treino(
                       nome: _nomeController.text,
-                      dataCadastro: DateTime.now(),
+                      dataCadastro:
+                          DateFormat('dd/MM/yyyy').format(DateTime.now()),
                       validade: _validadeController.text,
                       idFichaTreino: 1),
                 );

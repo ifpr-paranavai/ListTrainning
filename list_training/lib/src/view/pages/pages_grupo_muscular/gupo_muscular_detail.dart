@@ -65,8 +65,10 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
                         child: ListTile(
-                          title: Text(grupoMuscular.nome),
-                          subtitle: Text(grupoMuscular.id.toString()),
+                          title: Text(grupoMuscular.nome,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          subtitle: Text(grupoMuscular.descricao!),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

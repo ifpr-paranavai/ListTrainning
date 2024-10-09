@@ -4,7 +4,7 @@ class Treino {
   dynamic id;
   dynamic idFichaTreino;
   late String nome;
-  late DateTime dataCadastro;
+  late String dataCadastro;
   late String validade;
 
   Treino({
