@@ -50,6 +50,44 @@ class ExercicioFirebase {
     }
   }
 
+  Exercicio? getExercicioByIdF(String id) {
+    // Função que executa a consulta ao Firebase de forma síncrona para o fluxo
+    // Mas ainda depende do comportamento assíncrono de `await` internamente.
+    var result;
+
+    // Realizando a consulta dentro de uma função assíncrona
+    _getExercicio(id).then((exercicio) {
+      result = exercicio; // Atribui o resultado após a consulta
+    });
+
+    return result; // Retorna o resultado após a consulta
+  }
+
+  Future<Exercicio?> _getExercicio(String id) async {
+    try {
+      DocumentSnapshot docSnapshot = await root.doc(id).get();
+      if (docSnapshot.exists) {
+        return Exercicio.fromJson(docSnapshot.data() as Map<String, dynamic>);
+      } else {
+        print('Exercicio com ID $id não encontrado.');
+        return null;
+      }
+    } catch (e) {
+      print('Erro ao buscar exercicio: $e');
+      return null;
+    }
+  }
+
+  Stream<Exercicio> getExercicioByIdS(String id) {
+    return root
+        .doc(id)
+        .snapshots()
+        .where((docSnapshot) => docSnapshot.exists)
+        .map((docSnapshot) {
+      return Exercicio.fromJson(docSnapshot.data() as Map<String, dynamic>);
+    });
+  }
+
   // Função para alterar os dados de um exercício por ID específico
   Future<void> updateExercicio(
       {required String id, required Exercicio cExercicio}) async {

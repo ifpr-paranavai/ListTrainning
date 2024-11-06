@@ -3,7 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:list_training/src/model/firebase/treino_firebase.dart';
 import 'package:list_training/src/model/entidades/treino.dart';
 import 'package:list_training/src/view/components/campo_input.dart';
-import 'package:list_training/src/view/pages/home_page.dart';
+
+import '../pages_itens_treino/itens_treino_detail.dart'; // Import ItensTreinoDetail
 
 class TreinoDetail extends StatefulWidget {
   const TreinoDetail({super.key});
@@ -54,12 +55,13 @@ class _TreinoDetailState extends State<TreinoDetail> {
                     children: treinosOrdenados.map((Treino treino) {
                       return InkWell(
                         onTap: () {
-                          // Navegar para a tela de exercícios, passando o treino como parâmetro
+                          // Navegar para a tela de itens de treino, passando o treino selecionado como parâmetro
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => HomePage()
-                                //ExerciciosPage(treino: treino),
-                                ),
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ItensTreinoDetail(treino: treino),
+                            ),
                           );
                         },
                         child: Card(
@@ -70,11 +72,11 @@ class _TreinoDetailState extends State<TreinoDetail> {
                               children: [
                                 Text(
                                   treino.nome,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 8),
+                                const SizedBox(height: 8),
                                 Text(
                                     'Data de Cadastro: ${treino.dataCadastro}'),
                                 Text('Validade: ${treino.validade}'),
@@ -114,7 +116,7 @@ class _TreinoDetailState extends State<TreinoDetail> {
         return Wrap(
           children: [
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: formTreino(),
             ),
           ],
@@ -145,7 +147,7 @@ class _TreinoDetailState extends State<TreinoDetail> {
               retornoValidador: retornoValidador),
           CampoInput(
               visibilidade: false,
-              rotulo: 'Mese validade',
+              rotulo: 'Mes de validade',
               tipo: TextInputType.number,
               controller: _validadeController,
               retornoValidador: retornoValidador),
