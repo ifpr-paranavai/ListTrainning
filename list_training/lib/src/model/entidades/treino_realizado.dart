@@ -1,33 +1,29 @@
-import 'package:list_training/src/model/entidades/agenda.dart';
+import 'package:list_training/src/model/entidades/exercicio_realizado.dart';
 
 class TreinoRealizado {
   dynamic id;
-  dynamic idAgenda;
+  dynamic idTreino;
   late DateTime data;
-  late bool presente;
-
+  List<ExercicioRealizado>? exerciciosRealizados;
 
   TreinoRealizado({
     this.id,
+    this.idTreino,
+    this.exerciciosRealizados,
     required this.data,
-    required this.idAgenda,
-    required this.presente
-  });
+  }) {
+    exerciciosRealizados ??= [];
+  }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'idAgenda': idAgenda,
-      'data': data,
-      'presente': presente
-    };
+    return {'id': id, 'idTreino': idTreino, 'data': data};
   }
 
   static TreinoRealizado fromJson(Map<String, dynamic> json) {
     return TreinoRealizado(
-        id: json['id'],
-        idAgenda: json['idAgenda'],
-        data: json['data'],
-        presente: json['presente']);
+      id: json['id'],
+      idTreino: json['idTreino'],
+      data: json['data'],
+    );
   }
 }

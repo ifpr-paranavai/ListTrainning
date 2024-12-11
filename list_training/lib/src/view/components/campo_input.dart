@@ -4,8 +4,9 @@ class CampoInput extends StatelessWidget {
   String rotulo;
   TextInputType tipo;
   TextEditingController controller;
-  String? retornoValidador;
+  String retornoValidador;
   bool visibilidade = false;
+  IconData? icone;
 
   CampoInput(
       {Key? key,
@@ -13,7 +14,8 @@ class CampoInput extends StatelessWidget {
       required this.rotulo,
       required this.tipo,
       required this.controller,
-      required this.retornoValidador})
+      required this.retornoValidador,
+      this.icone})
       : super(key: key);
 
   @override

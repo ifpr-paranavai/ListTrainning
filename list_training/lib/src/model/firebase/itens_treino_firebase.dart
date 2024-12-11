@@ -146,4 +146,33 @@ class ItensTreinoFirebase {
           []); // Retorna um stream vazio se o usuário não estiver logado
     }
   }
+
+  Future<List<ItensTreino>> getItensTreinoFuture({required String idTreino}) async {
+  User? usuario = _auth.currentUser;
+
+  if (usuario != null) {
+    String userId = usuario.uid;
+
+    // Referência para a subcoleção 'itens_treino' dentro do treino específico do usuário
+    CollectionReference itensTreinoCollectionRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('treinos')
+        .doc(idTreino)
+        .collection('itens_treino');
+
+    // Busca os documentos da coleção
+    QuerySnapshot snapshot = await itensTreinoCollectionRef.get();
+
+    // Converte os documentos em objetos ItensTreino
+    List<ItensTreino> itensTreinoList = snapshot.docs.map((doc) {
+      return ItensTreino.fromJson(doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return itensTreinoList;
+  } else {
+    return []; // Retorna uma lista vazia se o usuário não estiver logado
+  }
+}
+
 }

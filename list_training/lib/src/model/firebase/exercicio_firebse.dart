@@ -50,19 +50,6 @@ class ExercicioFirebase {
     }
   }
 
-  Exercicio? getExercicioByIdF(String id) {
-    // Função que executa a consulta ao Firebase de forma síncrona para o fluxo
-    // Mas ainda depende do comportamento assíncrono de `await` internamente.
-    var result;
-
-    // Realizando a consulta dentro de uma função assíncrona
-    _getExercicio(id).then((exercicio) {
-      result = exercicio; // Atribui o resultado após a consulta
-    });
-
-    return result; // Retorna o resultado após a consulta
-  }
-
   Future<Exercicio?> _getExercicio(String id) async {
     try {
       DocumentSnapshot docSnapshot = await root.doc(id).get();

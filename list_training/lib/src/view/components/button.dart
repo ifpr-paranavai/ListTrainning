@@ -27,7 +27,7 @@ class Button extends StatelessWidget {
           icon: icone,
           label: Text(
             rotulo,
-            style: const TextStyle(fontSize: 25),
+            style: const TextStyle(fontSize: 25, color: Colors.white),
           ),
           style: ElevatedButton.styleFrom(primary: cor, shape: borda),
         ),

@@ -45,19 +45,17 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('ListTraining'),
+        title: const Text('Exercicios',
+            style: TextStyle(fontSize: 24, color: Colors.white)),
+        backgroundColor: Colors.deepPurple, // Cor do app bar
       ),
-      drawer: SafeArea(
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height - kToolbarHeight,
-          ),
-          child: DrawerExample(),
-        ),
-      ),
-      body: Center(
+      drawer: DrawerExample(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<List<Exercicio>>(
                 stream: exercicioFirebase.readExercicios(),
@@ -83,13 +81,23 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                   return ListView(
                     children: exerciciosOrdenados.map((Exercicio exercicio) {
                       return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
+                        elevation: 5, // Sombra suave no card
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         child: ListTile(
-                          title: Text(exercicio.nome,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                          subtitle: Text(exercicio.descricao.toString()),
+                          title: Text(
+                            exercicio.nome,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepPurple),
+                          ),
+                          subtitle: Text(
+                            exercicio.descricao.toString(),
+                            style: const TextStyle(fontSize: 14),
+                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -116,15 +124,18 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
                 },
               ),
             ),
-            const SizedBox(height: 16), // Espaçamento antes do botão
+            const SizedBox(height: 16),
             FloatingActionButton(
               onPressed: () {
                 _showModalBottomSheet(context);
               },
-              child: const Icon(Icons.add),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.deepPurple,
             ),
-            const SizedBox(
-                height: 32), // Espaçamento adicional antes do fim da tela
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -151,18 +162,15 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
 
   // Mostra modal para editar exercício existente
   void _showEditModal(BuildContext context, Exercicio exercicio) {
-    // Preencher os campos com os dados do exercício para edição
     _nomeController.text = exercicio.nome;
     _descricaoController.text = exercicio.descricao ?? '';
     _urlExplicacaoController.text = exercicio.urlExplicao ?? '';
 
-    // Encontrar o grupo muscular associado ao exercício
     _grupoMuscularSelecionado = _gruposMusculares?.firstWhere(
             (grupo) => grupo.id == exercicio.idGrupoMuscular,
             orElse: () => GrupoMuscular(id: '', nome: '')) ??
         null;
 
-    // Exibir o modal de edição
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -171,7 +179,7 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: formExercicio(isEdit: true), // Passando modo de edição
+              child: formExercicio(isEdit: true),
             ),
           ],
         );
@@ -208,116 +216,131 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
   Widget formExercicio({bool isEdit = false, String? exercicioId}) {
     return Form(
       child: Column(
-        mainAxisSize:
-            MainAxisSize.min, // Ajusta a altura da coluna ao mínimo necessário
+        mainAxisSize: MainAxisSize.min,
         children: [
+          // Título do formulário
           const SizedBox(
-            height: 50, // Definindo altura para o cabeçalho
+            height: 50,
             child: Center(
               child: Text(
-                'Cadastro de Exercicio',
-                style: TextStyle(fontSize: 30),
+                'Exercício',
+                style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.bold),
               ),
             ),
           ),
-          if (!isEdit)
-            dropdownGrupoMuscular(), // Só mostra o dropdown se não for edição
-          CampoInput(
-              visibilidade: false,
-              rotulo: 'Nome',
-              tipo: TextInputType.name,
-              controller: _nomeController,
-              retornoValidador: retornoValidador),
-          CampoInput(
-              visibilidade: false,
-              rotulo: 'Descrição',
-              tipo: TextInputType.text,
-              controller: _descricaoController,
-              retornoValidador: retornoValidador),
-          CampoInput(
-              visibilidade: false,
-              rotulo: 'Url',
-              tipo: TextInputType.url,
-              controller: _urlExplicacaoController,
-              retornoValidador: retornoValidador),
+          const SizedBox(height: 16),
 
-          SizedBox(
-            height: 50, // Definindo altura para o botão
-            child: ElevatedButton(
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add_task_rounded),
-                  SizedBox(width: 8), // Espaçamento entre ícone e texto
-                  Text('Salvar'),
-                ],
-              ),
-              onPressed: () {
-                if (_grupoMuscularSelecionado != null) {
-                  if (isEdit && exercicioId != null) {
-                    // Atualizar o exercício existente
-                    exercicioFirebase.updateExercicio(
+          // Dropdown para selecionar o grupo muscular
+          if (!isEdit) dropdownGrupoMuscular(),
+
+          // Campo para nome
+          CampoInput(
+            visibilidade: false,
+            rotulo: 'Nome',
+            tipo: TextInputType.name,
+            controller: _nomeController,
+            retornoValidador: retornoValidador,
+          ),
+
+          // Campo para descrição
+          CampoInput(
+            visibilidade: false,
+            rotulo: 'Descrição',
+            tipo: TextInputType.text,
+            controller: _descricaoController,
+            retornoValidador: retornoValidador,
+          ),
+
+          // Campo para URL
+          CampoInput(
+            visibilidade: false,
+            rotulo: 'URL',
+            tipo: TextInputType.url,
+            controller: _urlExplicacaoController,
+            retornoValidador: retornoValidador,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Botão de salvar com tamanho ajustado
+          ElevatedButton.icon(
+            icon: const Icon(Icons.add_task_rounded, color: Colors.white),
+            label: const Text('Salvar', style: TextStyle(color: Colors.white)),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.deepPurple, // Cor do botão de salvar
+              shape:
+                  StadiumBorder(), // Estilo arredondado igual ao do botão de login
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 32, vertical: 12), // Ajuste de tamanho do botão
+            ),
+            onPressed: () {
+              if (_grupoMuscularSelecionado != null) {
+                if (isEdit && exercicioId != null) {
+                  exercicioFirebase.updateExercicio(
+                    id: exercicioId,
+                    cExercicio: Exercicio(
                       id: exercicioId,
-                      cExercicio: Exercicio(
-                        id: exercicioId,
-                        nome: _nomeController.text,
-                        descricao: _descricaoController.text,
-                        urlExplicao: _urlExplicacaoController.text,
-                        idGrupoMuscular: _grupoMuscularSelecionado!.id,
-                      ),
-                    );
-                  } else {
-                    // Adicionar um novo exercício
-                    exercicioFirebase.addExercicio(
-                      cExercicio: Exercicio(
-                        nome: _nomeController.text,
-                        descricao: _descricaoController.text,
-                        urlExplicao: _urlExplicacaoController.text,
-                        idGrupoMuscular: _grupoMuscularSelecionado!.id,
-                      ),
-                    );
-                  }
-                  Navigator.pop(context);
+                      nome: _nomeController.text,
+                      descricao: _descricaoController.text,
+                      urlExplicao: _urlExplicacaoController.text,
+                      idGrupoMuscular: _grupoMuscularSelecionado!.id,
+                    ),
+                  );
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Selecione um grupo muscular'),
+                  exercicioFirebase.addExercicio(
+                    cExercicio: Exercicio(
+                      nome: _nomeController.text,
+                      descricao: _descricaoController.text,
+                      urlExplicao: _urlExplicacaoController.text,
+                      idGrupoMuscular: _grupoMuscularSelecionado!.id,
                     ),
                   );
                 }
-
-                // Limpar os campos do formulário
-                _nomeController.clear();
-                _descricaoController.clear();
-                _urlExplicacaoController.clear();
-                setState(
-                  () {
-                    _grupoMuscularSelecionado = null;
-                  },
+                Navigator.pop(context);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Selecione um grupo muscular'),
+                  ),
                 );
-              },
-            ),
+              }
+
+              // Limpar os campos do formulário
+              _nomeController.clear();
+              _descricaoController.clear();
+              _urlExplicacaoController.clear();
+              setState(() {
+                _grupoMuscularSelecionado = null;
+              });
+            },
           ),
+
+          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
-  // Função para construir o DropdownButton
   Widget dropdownGrupoMuscular() {
     if (_isLoading) {
-      return const CircularProgressIndicator(); // Indicador de carregamento
+      return const CircularProgressIndicator();
     }
 
     return SizedBox(
       width: 300,
-      height: 100,
+      height: 60,
       child: DropdownButtonFormField<GrupoMuscular>(
         isExpanded: true,
         decoration: InputDecoration(
+          labelText: 'Grupo Muscular',
+          prefixIcon: const Icon(Icons.fitness_center),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
         ),
         hint: Text(
             _grupoMuscularSelecionado?.nome ?? 'Selecione um grupo muscular'),
@@ -328,16 +351,15 @@ class _ExercicioDetailState extends State<ExercicioDetail> {
             child: Text(grupo.nome),
           );
         }).toList(),
-        value: _grupoMuscularSelecionado, // Define o valor selecionado
+        value: _grupoMuscularSelecionado,
         onChanged: (GrupoMuscular? novoGrupo) {
           setState(() {
-            _grupoMuscularSelecionado =
-                novoGrupo; // Atualiza o valor selecionado
+            _grupoMuscularSelecionado = novoGrupo;
           });
         },
         validator: (GrupoMuscular? value) {
           if (value == null) {
-            return 'Campo obrigatório'; // Validação do campo
+            return 'Campo obrigatório';
           }
           return null;
         },

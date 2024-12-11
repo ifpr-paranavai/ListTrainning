@@ -1,33 +1,35 @@
 class ExercicioRealizado {
   dynamic id;
-  dynamic idExercicio;
+  dynamic idTreinoRealizado;
+  late String nome;
   late double peso;
   late int repeticao;
-  late String tempoDescanco;
+  late DateTime dataRealizacao;
 
   ExercicioRealizado(
       {this.id,
-      this.idExercicio,
+      required this.nome,
       required this.peso,
       required this.repeticao,
-      required this.tempoDescanco});
+      required this.dataRealizacao});
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'idExercicio': idExercicio,
+      'idTreinoRealizado': idTreinoRealizado,
+      'nome': nome,
       'peso': peso,
       'repeticao': repeticao,
-      'tempoDescanco': tempoDescanco
+      'dataRealizacao': dataRealizacao
     };
   }
 
   static ExercicioRealizado fromJson(Map<String, dynamic> json) {
     return ExercicioRealizado(
         id: json['id'],
-        idExercicio: json['idExercicio'],
+        nome: json['nome'],
         peso: json['peso'],
         repeticao: json['repeticao'],
-        tempoDescanco: json['tempoDescanco']);
+        dataRealizacao: json['dataRealizacao']);
   }
 }

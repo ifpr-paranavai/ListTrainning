@@ -27,8 +27,8 @@ class ButtonEntrar extends StatelessWidget {
       decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xfff45d27),
-              Color(0xFFf5851f),
+              Colors.deepPurple,
+              Color.fromARGB(255, 203, 196, 215),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

@@ -15,6 +15,7 @@ class DrawerExample extends StatefulWidget {
 class _DrawerExampleState extends State<DrawerExample> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
+
   Future<void> _getUserData() async {
     final user = _auth.currentUser;
     setState(() {
@@ -31,6 +32,7 @@ class _DrawerExampleState extends State<DrawerExample> {
   @override
   Widget build(BuildContext context) {
     final firebaseAuth = FirebaseAuth.instance;
+
     void logout() async {
       await firebaseAuth.signOut().then((user) => Navigator.pushReplacement(
             context,
@@ -41,73 +43,108 @@ class _DrawerExampleState extends State<DrawerExample> {
     }
 
     return Drawer(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                        'Nome de Usuário: ${_user!.displayName ?? 'Não disponível'}'),
-                  )
-                ],
+      child: Column(
+        children: [
+          // Cabeçalho do Drawer com informações do usuário
+          UserAccountsDrawerHeader(
+            decoration: const BoxDecoration(
+              color: Colors.deepPurple,
+            ),
+            accountName: Text(
+              _user?.displayName ?? 'Usuário Anônimo',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            accountEmail: Text(
+              _user?.email ?? 'Email não disponível',
+              style: const TextStyle(fontSize: 14),
+            ),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                _user?.displayName?.substring(0, 1).toUpperCase() ?? '?',
+                style: const TextStyle(fontSize: 40, color: Colors.deepPurple),
               ),
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TreinoDetail(),
-                    ),
-                  );
-                },
-                child: const Text('Treinos'),
-              ),
+          ),
+
+          // Lista de opções no Drawer
+          Expanded(
+            child: ListView(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.fitness_center,
+                      color: Colors.deepPurple),
+                  title: const Text(
+                    'Treinos',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TreinoDetail(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.directions_run,
+                      color: Colors.deepPurple),
+                  title: const Text(
+                    'Exercícios',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ExercicioDetail(),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading:
+                      const Icon(Icons.group_work, color: Colors.deepPurple),
+                  title: const Text(
+                    'Grupo Muscular',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GrupoMuscularDetail(),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ExercicioDetail(),
-                    ),
-                  );
-                },
-                child: const Text('Exercicios'),
+          ),
+
+          // Botão de Logout
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
+              icon: const Icon(Icons.exit_to_app, color: Colors.white),
+              label: const Text(
+                'Sair',
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+              onPressed: () {
+                logout();
+              },
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const GrupoMuscularDetail(),
-                    ),
-                  );
-                },
-                child: const Text('Grupo Muscular'),
-              ),
-            ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: TextButton(
-                onPressed: () {
-                  logout();
-                },
-                child: const Text('Sair'),
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

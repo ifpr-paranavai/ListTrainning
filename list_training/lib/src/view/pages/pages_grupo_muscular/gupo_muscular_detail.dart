@@ -23,19 +23,19 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('ListTraining'),
-      ),
-      drawer: SafeArea(
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height - kToolbarHeight,
-          ),
-          child: DrawerExample(),
+        title: const Text(
+          'Grupos Musculares',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: Colors.deepPurple,
       ),
-      body: Center(
+      drawer: DrawerExample(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<List<GrupoMuscular>>(
                 stream: grupoMuscularFirebase.readGruposMusculares(),
@@ -54,32 +54,40 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
                         child: Text("Nenhum Grupo Muscular encontrado"));
                   }
 
-                  // Ordenando os exercícios por nome em ordem alfabética
-                  final exerciciosOrdenados = snapshot.data!
+                  // Ordenando os grupos musculares por nome em ordem alfabética
+                  final gruposOrdenados = snapshot.data!
                     ..sort((a, b) => a.nome.compareTo(b.nome));
 
                   return ListView(
                     children:
-                        exerciciosOrdenados.map((GrupoMuscular grupoMuscular) {
+                        gruposOrdenados.map((GrupoMuscular grupoMuscular) {
                       return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
+                        margin: const EdgeInsets.symmetric(vertical: 8.0),
                         child: ListTile(
-                          title: Text(grupoMuscular.nome,
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
-                          subtitle: Text(grupoMuscular.descricao!),
+                          title: Text(
+                            grupoMuscular.nome,
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.deepPurple),
+                          ),
+                          subtitle: Text(
+                            grupoMuscular.descricao!,
+                            style: TextStyle(color: Colors.black),
+                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.edit),
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () {
                                   _showEditModal(context, grupoMuscular);
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete),
+                                icon:
+                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   _confirmDelete(context, grupoMuscular.id);
                                 },
@@ -98,7 +106,11 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
               onPressed: () {
                 _showModalBottomSheet(context);
               },
-              child: const Icon(Icons.add),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.deepPurple,
             ),
             const SizedBox(height: 32),
           ],
@@ -141,9 +153,14 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'Editar Grupo Muscular',
-                    style: TextStyle(fontSize: 24),
+                  const SizedBox(
+                    height: 50,
+                    child: Center(
+                      child: Text(
+                        'Editar Grupo Muscular',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ),
                   ),
                   CampoInput(
                       visibilidade: false,
@@ -157,16 +174,26 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
                       tipo: TextInputType.text,
                       controller: _descricaoController,
                       retornoValidador: retornoValidador),
-                  ElevatedButton(
-                    child: const Text('Salvar'),
-                    onPressed: () {
-                      grupoMuscularFirebase.updateGrupoMuscular(
-                        id: grupoMuscular.id,
-                        nome: _nomeController.text,
-                        descricao: _descricaoController.text,
-                      );
-                      Navigator.pop(context);
-                    },
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_task_rounded),
+                          SizedBox(width: 8),
+                          Text('Salvar'),
+                        ],
+                      ),
+                      onPressed: () {
+                        grupoMuscularFirebase.updateGrupoMuscular(
+                          id: grupoMuscular.id,
+                          nome: _nomeController.text,
+                          descricao: _descricaoController.text,
+                        );
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -237,47 +264,54 @@ class _GrupoMuscularDetailState extends State<GrupoMuscularDetail> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(
-            height: 50,
-            child: Center(
-              child: Text(
-                'Cadastro de Grupo Muscular',
-                style: TextStyle(fontSize: 30),
+          const SizedBox(height: 20), // Adiciona espaço acima do título
+          const Center(
+            child: Text(
+              'Grupo Muscular',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold, // Dá maior destaque ao título
+                color: Colors.deepPurple, // Cor para combinar com o tema
               ),
+              textAlign: TextAlign.center, // Garante alinhamento central
             ),
           ),
+          const SizedBox(height: 20), // Espaço abaixo do título
           CampoInput(
-              visibilidade: false,
-              rotulo: 'Nome',
-              tipo: TextInputType.name,
-              controller: _nomeController,
-              retornoValidador: retornoValidador),
+            visibilidade: false,
+            rotulo: 'Nome',
+            tipo: TextInputType.name,
+            controller: _nomeController,
+            retornoValidador: retornoValidador,
+          ),
           CampoInput(
-              visibilidade: false,
-              rotulo: 'Descrição',
-              tipo: TextInputType.text,
-              controller: _descricaoController,
-              retornoValidador: retornoValidador),
-          SizedBox(
-            height: 50,
-            child: ElevatedButton(
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.add_task_rounded),
-                  SizedBox(width: 8),
-                  Text('Salvar'),
-                ],
-              ),
-              onPressed: () {
-                grupoMuscularFirebase.addGrupoMuscular(
-                  cGrupoMuscular: GrupoMuscular(
-                      nome: _nomeController.text,
-                      descricao: _descricaoController.text),
-                );
-                Navigator.pop(context);
-              },
+            visibilidade: false,
+            rotulo: 'Descrição',
+            tipo: TextInputType.text,
+            controller: _descricaoController,
+            retornoValidador: retornoValidador,
+          ),
+          const SizedBox(height: 20), // Espaço entre os campos e o botão
+          ElevatedButton.icon(
+            icon: const Icon(Icons.add_task_rounded, color: Colors.white),
+            label: const Text(
+              'Salvar',
+              style: TextStyle(color: Colors.white),
             ),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.deepPurple, // Cor do botão de salvar
+              shape: const StadiumBorder(), // Estilo arredondado
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+            ),
+            onPressed: () {
+              grupoMuscularFirebase.addGrupoMuscular(
+                cGrupoMuscular: GrupoMuscular(
+                  nome: _nomeController.text,
+                  descricao: _descricaoController.text,
+                ),
+              );
+              Navigator.pop(context);
+            },
           ),
         ],
       ),

@@ -27,18 +27,14 @@ class _CadastroPageState extends State<CadastroPage> {
       UserCredential userCredential = await _firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: senha);
 
-      // Atualiza o nome do usuário (displayName)
       if (userCredential.user != null) {
         await userCredential.user!.updateDisplayName(nome);
-
-        // Força o recarregamento do perfil do usuário para garantir que o displayName esteja atualizado
         await userCredential.user!.reload();
       }
 
-      // Redireciona para a página de login após o cadastro
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => const LoginPage()),
         (route) => false,
       );
     } on FirebaseAuthException catch (e) {
@@ -69,7 +65,6 @@ class _CadastroPageState extends State<CadastroPage> {
       );
       return false;
     }
-
     if (!RegExp(r'[a-zA-Z]').hasMatch(senha)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -79,7 +74,6 @@ class _CadastroPageState extends State<CadastroPage> {
       );
       return false;
     }
-
     if (!RegExp(r'[0-9]').hasMatch(senha)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -89,7 +83,6 @@ class _CadastroPageState extends State<CadastroPage> {
       );
       return false;
     }
-
     if (!RegExp(r'[A-Z]').hasMatch(senha)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -99,7 +92,6 @@ class _CadastroPageState extends State<CadastroPage> {
       );
       return false;
     }
-
     return true;
   }
 
@@ -108,53 +100,90 @@ class _CadastroPageState extends State<CadastroPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Cadastro'),
-      ),
-      body: Form(
-        key: formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16.0),
-          children: [
-            CampoInput(
-              visibilidade: false,
-              rotulo: 'Nome',
-              tipo: TextInputType.name,
-              controller: _nomeController,
-              retornoValidador: 'Preencha o campo',
-            ),
-            CampoInput(
-              visibilidade: false,
-              rotulo: 'Email',
-              tipo: TextInputType.emailAddress,
-              controller: _emailController,
-              retornoValidador: 'Preencha o campo',
-            ),
-            CampoInput(
-              visibilidade: false,
-              rotulo: 'Senha',
-              tipo: TextInputType.visiblePassword,
-              controller: _passwordController,
-              retornoValidador: 'Preencha o campo',
-            ),
-            Button(
-              icone: const Icon(Icons.one_k),
-              rotulo: 'Cadastrar',
-              cor: Colors.blue,
-              borda: const StadiumBorder(),
-              acao: () {
-                var validar = formKey.currentState?.validate();
-                if (validar == true) {
-                  if (senhaValida(senha: _passwordController.text)) {
-                    cadastrar(
-                      email: _emailController.text,
-                      senha: _passwordController.text,
-                      nome: _nomeController.text,
-                    );
-                  }
-                }
-              },
-            ),
+        backgroundColor: Colors.deepPurple,
+        elevation: 4,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.person_add, color: Colors.white),
+            SizedBox(width: 8),
+            Text('Cadastro', style: TextStyle(color: Colors.white)),
           ],
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.purpleAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Card(
+            margin: const EdgeInsets.all(16),
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CampoInput(
+                      visibilidade: false,
+                      rotulo: 'Nome',
+                      tipo: TextInputType.name,
+                      controller: _nomeController,
+                      retornoValidador: 'Preencha o campo',
+                      icone: Icons.person,
+                    ),
+                    const SizedBox(height: 16),
+                    CampoInput(
+                      visibilidade: false,
+                      rotulo: 'Email',
+                      tipo: TextInputType.emailAddress,
+                      controller: _emailController,
+                      retornoValidador: 'Preencha o campo',
+                      icone: Icons.email,
+                    ),
+                    const SizedBox(height: 16),
+                    CampoInput(
+                      visibilidade: true,
+                      rotulo: 'Senha',
+                      tipo: TextInputType.visiblePassword,
+                      controller: _passwordController,
+                      retornoValidador: 'Preencha o campo',
+                      icone: Icons.lock,
+                    ),
+                    const SizedBox(height: 24),
+                    Button(
+                      icone: const Icon(
+                        Icons.person_add_alt_1_outlined,
+                        color: Colors.white,
+                      ),
+                      rotulo: 'Cadastrar',
+                      cor: Colors.deepPurple,
+                      borda: const StadiumBorder(),
+                      acao: () {
+                        if (formKey.currentState?.validate() == true &&
+                            senhaValida(senha: _passwordController.text)) {
+                          cadastrar(
+                            email: _emailController.text,
+                            senha: _passwordController.text,
+                            nome: _nomeController.text,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

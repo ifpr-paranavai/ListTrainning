@@ -36,10 +36,6 @@ class _BottomNavigationBarExampleState
     ];
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('ListTraining'),
-      ),
       body: IndexedStack(
         index: _selectedIndex,
         children: _pages,

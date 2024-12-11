@@ -18,31 +18,48 @@ class _HomePageState extends State<HomePage> {
         body: SafeArea(
           child: Column(
             children: [
+              // Título de "Treinos"
               Container(
                 color: Colors.amber,
                 height: 100,
-                
-                child: Text('Treinos'),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      color: Colors.black,
-                      width: MediaQuery.of(context).size.width / 3,
-                      height: 100,
+                child: const Center(
+                  child: Text(
+                    'Treinos',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Spacer(),
-                    Container(
-                      color: Colors.orange,
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      height: 100,
-                    )
-                  ],
+                  ),
                 ),
-              )
+              ),
+              // Grid de Cards
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // 2 colunas
+                    crossAxisSpacing: 8.0, // Espaçamento entre as colunas
+                    mainAxisSpacing: 8.0, // Espaçamento entre as linhas
+                    childAspectRatio:
+                        1.0, // Proporção de cada card (ajusta o tamanho)
+                  ),
+                  itemCount: 4, // Número total de cards
+                  itemBuilder: (context, index) {
+                    return Card(
+                      elevation: 4.0,
+                      color: Colors.blueGrey[100],
+                      child: Center(
+                        child: Text(
+                          'Card ${index + 1}', // Texto para identificação do card
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),
