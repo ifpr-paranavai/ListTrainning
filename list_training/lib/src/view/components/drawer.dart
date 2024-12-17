@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/check_page.dart';
+import 'package:list_training/src/view/pages/home_page.dart';
 import 'package:list_training/src/view/pages/pages_exercicio/exercicio_detail.dart';
 import 'package:list_training/src/view/pages/pages_grupo_muscular/gupo_muscular_detail.dart';
 import 'package:list_training/src/view/pages/pages_treino/treino_detail.dart';
@@ -71,6 +72,21 @@ class _DrawerExampleState extends State<DrawerExample> {
           Expanded(
             child: ListView(
               children: [
+                ListTile(
+                  leading: const Icon(Icons.home, color: Colors.deepPurple),
+                  title: const Text(
+                    'Home',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.fitness_center,
                       color: Colors.deepPurple),

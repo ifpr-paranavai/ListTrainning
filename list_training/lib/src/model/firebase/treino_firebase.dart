@@ -30,6 +30,7 @@ class TreinoFirebase {
           dataCadastro: cTreino.dataCadastro,
           idFichaTreino: cTreino.idFichaTreino,
           validade: cTreino.validade,
+          descricao: cTreino.descricao,
         ).toJson();
 
         // Adiciona o treino à subcoleção

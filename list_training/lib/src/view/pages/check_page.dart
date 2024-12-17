@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:list_training/src/view/pages/home_page.dart';
 import 'package:list_training/src/view/pages/login_page.dart';
-import 'package:list_training/src/view/pages/pages_treino/treino_detail.dart';
-
-import '../components/bottom_navigation.dart';
 
 class CheckPage extends StatefulWidget {
   const CheckPage({super.key});
@@ -31,7 +29,7 @@ class _CheckPageState extends State<CheckPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const TreinoDetail(),
+              builder: (context) => const HomePage(),
             ),
           );
         }

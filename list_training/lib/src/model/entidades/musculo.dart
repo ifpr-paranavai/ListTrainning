@@ -1,4 +1,3 @@
-import 'package:list_training/src/model/entidades/grupo_muscular.dart';
 
 class Musculo {
   dynamic id;

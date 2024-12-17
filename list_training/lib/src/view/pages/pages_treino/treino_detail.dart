@@ -18,6 +18,7 @@ class _TreinoDetailState extends State<TreinoDetail> {
   final _nomeController = TextEditingController();
   final _validadeController = TextEditingController();
   String retornoValidador = 'Campo obrigatório';
+  final _decricaoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +105,17 @@ class _TreinoDetailState extends State<TreinoDetail> {
                                     ),
                                   ],
                                 ),
+                                const SizedBox(height: 12),
+                                // Descrição do Treino
+                                treino.descricao != null
+                                    ? Text(
+                                        treino.descricao,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
+                                      )
+                                    : const Text(''),
                                 const SizedBox(height: 12),
                                 // Data de Cadastro e Validade com Ícones
                                 Row(
@@ -234,6 +246,13 @@ class _TreinoDetailState extends State<TreinoDetail> {
           ),
           CampoInput(
             visibilidade: false,
+            rotulo: 'Descrição',
+            tipo: TextInputType.text,
+            controller: _decricaoController,
+            retornoValidador: retornoValidador,
+          ),
+          CampoInput(
+            visibilidade: false,
             rotulo: 'Mês de validade',
             tipo: TextInputType.number,
             controller: _validadeController,
@@ -254,13 +273,14 @@ class _TreinoDetailState extends State<TreinoDetail> {
             onPressed: () {
               treinoFirebase.addTreinoParaUsuarioLogado(
                 cTreino: Treino(
+                  descricao: _decricaoController.text,
                   nome: _nomeController.text,
                   dataCadastro: DateFormat('dd/MM/yyyy').format(DateTime.now()),
                   validade: _validadeController.text,
                   idFichaTreino: 1,
                 ),
               );
-
+              _decricaoController.clear();
               _nomeController.clear();
               _validadeController.clear();
               Navigator.pop(context); // Fecha o modal após salvar

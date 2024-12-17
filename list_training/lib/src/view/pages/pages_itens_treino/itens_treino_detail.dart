@@ -4,8 +4,11 @@ import 'package:list_training/src/model/entidades/itens_treino.dart';
 import 'package:list_training/src/model/entidades/exercicio.dart';
 import 'package:list_training/src/model/firebase/exercicio_firebse.dart';
 import 'package:list_training/src/model/firebase/itens_treino_firebase.dart';
+import 'package:list_training/src/model/firebase/treino_realizado_firebase.dart';
 
 import 'package:list_training/src/view/components/campo_input.dart';
+
+import '../../../model/entidades/treino_realizado.dart';
 
 class ItensTreinoDetail extends StatefulWidget {
   final Treino treino;
@@ -23,8 +26,95 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
   final TextEditingController _repeticaoController = TextEditingController();
   final TextEditingController _sequenciaController = TextEditingController();
   final String retornoValidador = 'Campo obrigatório';
+
   String? _selectedExercicioId;
   bool _isSwitchOn = false;
+  List<ItensTreino> itensTreinoSwtich = [];
+
+  TreinoRealizadoFirebase treinoRealizadoFirebase = TreinoRealizadoFirebase();
+
+  Map<String, bool> _switchStates = {};
+
+  Future<void> _finalizarTreino() async {
+    if (_switchStates.isEmpty) {
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Sem exercícios marcados'),
+            content: const Text(
+                'Por favor, marque pelo menos um exercício antes de finalizar o treino.'),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Fecha a dialog manualmente
+                },
+              ),
+            ],
+          );
+        },
+      );
+      return; // Adicionando return para evitar a execução do código abaixo caso o alerta seja mostrado
+    }
+
+    // Obtém os itens de treino
+    final List<ItensTreino> itensTreino = await itensTreinoFirebase
+        .getItensTreinoFuture(idTreino: widget.treino.id);
+
+    // Cria uma lista para os itens de treino que foram marcados
+    final List<ItensTreino> itensTreinoSwtich = [];
+
+    // Filtra os itens de treino que foram marcados
+    for (final item in itensTreino) {
+      if (_switchStates[item.id] == true) {
+        itensTreinoSwtich.add(item);
+      }
+    }
+
+    // Cria o objeto TreinoRealizado com os dados do Treino
+    final TreinoRealizado treinoRealizado = TreinoRealizado(
+      idTreino: widget.treino.id, // ID do treino
+      nome: widget.treino.nome, // Nome do treino
+      data: DateTime.now(), // Data do treino realizado
+    );
+
+    // Chama a função para adicionar o treino realizado com os exercícios
+    await treinoRealizadoFirebase.addTreinoRealizadoComExercicios(
+      treinoRealizado: treinoRealizado,
+      exerciciosRealizados: itensTreinoSwtich,
+    );
+
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Impede que o usuário feche a dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Treino Finalizado'),
+          content: const Text('Seu treino foi finalizado com sucesso!'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha a dialog manualmente
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    // Define a duração para a exibição da Dialog (exemplo: 3 segundos)
+    Future.delayed(const Duration(seconds: 3), () {
+      // Fecha a Dialog automaticamente após 3 segundos
+      Navigator.of(context).pop();
+    });
+
+    // Reseta o estado do switch após finalizar o treino
+    setState(() {
+      _switchStates = {};
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +122,7 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          '${widget.treino.nome}',
+          '${widget.treino.nome} - ${widget.treino.descricao}',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.deepPurple,
@@ -57,7 +147,8 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
                   }
 
                   if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text("Treino Cadastrado"));
+                    return const Center(
+                        child: Text("Nenhum Treino Encontrado"));
                   }
 
                   final itensTreino = snapshot.data!;
@@ -125,15 +216,23 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
                                         ),
                                         Switch(
                                           value:
-                                              _isSwitchOn, // Agora vinculado ao estado
+                                              _switchStates[item.id] ?? false,
                                           onChanged: (bool value) {
                                             setState(() {
-                                              _isSwitchOn =
-                                                  value; // Atualiza o estado com o novo valor
+                                              _switchStates[item.id!] = value;
                                             });
                                           },
-                                          activeColor: Colors
-                                              .green, // Cor do switch quando ativado
+                                          activeColor: Colors.grey,
+                                          inactiveTrackColor:
+                                              Colors.grey.shade300,
+                                          thumbColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                                  (Set<MaterialState> states) {
+                                            return states.contains(
+                                                    MaterialState.selected)
+                                                ? Colors.green
+                                                : Colors.grey;
+                                          }),
                                         ),
                                       ],
                                     ),
@@ -198,21 +297,27 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
                                             ),
                                           ],
                                         ),
-                                        // Carga
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                          ),
-                                          child: Text(
-                                            '${item.peso} kg',
-                                            style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                        // Carga (Peso) - Editable
+                                        GestureDetector(
+                                          onTap: () {
+                                            showEditPesoDialog(context, item,
+                                                widget.treino.id!);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 8),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                            ),
+                                            child: Text(
+                                              '${item.peso} kg',
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -231,13 +336,41 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
               ),
             ),
             const SizedBox(height: 16),
-            FloatingActionButton(
-              onPressed: () => _showAddItemModal(context),
-              child: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              backgroundColor: Colors.deepPurple,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: FloatingActionButton(
+                    onPressed: () => _showAddItemModal(context),
+                    backgroundColor: Colors.deepPurple,
+                    child: const Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      await _finalizarTreino();
+                    },
+                    icon:
+                        const Icon(Icons.add_task_rounded, color: Colors.white),
+                    label: const Text(
+                      'Finalizar Treino',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.deepPurple,
+                      shape: const StadiumBorder(),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32, vertical: 12),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 32),
           ],
@@ -422,7 +555,7 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
           const SizedBox(height: 16),
           CampoInput(
             visibilidade: false,
-            rotulo: 'Sequência',
+            rotulo: 'Séries',
             tipo: TextInputType.number,
             controller: _sequenciaController,
             retornoValidador: 'Campo obrigatório',
@@ -439,7 +572,10 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
               shape: const StadiumBorder(),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
             ),
-            onPressed: onSave,
+            onPressed: () {
+              onSave();
+              setState(() {});
+            },
           ),
         ],
       ),
@@ -472,6 +608,59 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
               onPressed: () async {
                 await itensTreinoFirebase.deleteItemTreino(
                     idTreino: treinoId, idItemTreino: itemId);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showEditPesoDialog(
+      BuildContext context, ItensTreino item, String treinoId) {
+    TextEditingController pesoController =
+        TextEditingController(text: item.peso.toString());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alterar Peso'),
+          content: TextField(
+            controller: pesoController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(
+              labelText: 'Peso (kg)',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Salvar'),
+              onPressed: () async {
+                // Obter o novo peso do campo de texto
+                double novoPeso =
+                    double.tryParse(pesoController.text) ?? item.peso;
+
+                // Atualiza o peso localmente
+                setState(() {
+                  item.peso = novoPeso;
+                });
+
+                // Chama a função para atualizar o peso no banco de dados
+                itensTreinoFirebase.atualizarPesoNoBanco(
+                  item.id,
+                  treinoId,
+                  novoPeso,
+                );
+
+                // Fecha o diálogo
                 Navigator.of(context).pop();
               },
             ),

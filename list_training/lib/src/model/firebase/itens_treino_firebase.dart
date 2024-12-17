@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:list_training/src/model/entidades/itens_treino.dart';
 
 class ItensTreinoFirebase {
@@ -147,32 +149,98 @@ class ItensTreinoFirebase {
     }
   }
 
-  Future<List<ItensTreino>> getItensTreinoFuture({required String idTreino}) async {
-  User? usuario = _auth.currentUser;
+  Future<List<ItensTreino>> getItensTreinoFuture(
+      {required String idTreino}) async {
+    User? usuario = _auth.currentUser;
 
-  if (usuario != null) {
-    String userId = usuario.uid;
+    if (usuario != null) {
+      String userId = usuario.uid;
 
-    // Referência para a subcoleção 'itens_treino' dentro do treino específico do usuário
-    CollectionReference itensTreinoCollectionRef = _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('treinos')
-        .doc(idTreino)
-        .collection('itens_treino');
+      // Referência para a subcoleção 'itens_treino' dentro do treino específico do usuário
+      CollectionReference itensTreinoCollectionRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('treinos')
+          .doc(idTreino)
+          .collection('itens_treino');
 
-    // Busca os documentos da coleção
-    QuerySnapshot snapshot = await itensTreinoCollectionRef.get();
+      // Busca os documentos da coleção
+      QuerySnapshot snapshot = await itensTreinoCollectionRef.get();
 
-    // Converte os documentos em objetos ItensTreino
-    List<ItensTreino> itensTreinoList = snapshot.docs.map((doc) {
-      return ItensTreino.fromJson(doc.data() as Map<String, dynamic>);
-    }).toList();
+      // Converte os documentos em objetos ItensTreino
+      List<ItensTreino> itensTreinoList = snapshot.docs.map((doc) {
+        return ItensTreino.fromJson(doc.data() as Map<String, dynamic>);
+      }).toList();
 
-    return itensTreinoList;
-  } else {
-    return []; // Retorna uma lista vazia se o usuário não estiver logado
+      return itensTreinoList;
+    } else {
+      return []; // Retorna uma lista vazia se o usuário não estiver logado
+    }
   }
-}
 
+  void showEditPesoDialog(
+      BuildContext context, ItensTreino item, VoidCallback acao) {
+    TextEditingController pesoController =
+        TextEditingController(text: item.peso.toString());
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alterar Peso'),
+          content: TextField(
+            controller: pesoController,
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
+            decoration: const InputDecoration(
+              labelText: 'Peso (kg)',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Salvar'),
+              onPressed: acao,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> atualizarPesoNoBanco(
+      String itemId, String idTreino, double novoPeso) async {
+    try {
+      // Obtém o usuário logado
+      User? usuario = FirebaseAuth.instance.currentUser;
+
+      if (usuario != null) {
+        // Referência para a coleção de 'users' e dentro dela 'treinos' e 'itensTreino'
+        DocumentReference itemDocRef = FirebaseFirestore.instance
+            .collection('users') // Coleção de usuários
+            .doc(usuario.uid) // ID do usuário logado
+            .collection('treinos') // Coleção de treinos do usuário
+            .doc(
+                idTreino) // Supondo que você tenha o ID do treino, caso contrário, você pode ajustar isso
+            .collection(
+                'itens_treino') // Coleção de itens de treino dentro do treino
+            .doc(itemId); // Documento específico do item de treino
+
+        // Atualiza o peso no documento do item de treino
+        await itemDocRef.update({
+          'peso': novoPeso,
+        });
+
+        print('Peso atualizado com sucesso para o item $itemId.');
+      } else {
+        print('Nenhum usuário está logado.');
+      }
+    } catch (e) {
+      print('Erro ao atualizar peso no banco: $e');
+    }
+  }
 }
