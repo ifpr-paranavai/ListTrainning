@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:list_training/src/view/pages/cadastro_page.dart';
+import 'package:list_training/src/view/pages/home_page.dart';
 import 'package:list_training/src/view/pages/pages_treino/treino_detail.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TreinoDetail(),
+            builder: (context) => HomePage(),
           ),
         );
       }

@@ -71,11 +71,11 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
         itensTreinoSwtich.add(item);
       }
     }
-
+    String nomeTreino = '${widget.treino.nome} - ${widget.treino.descricao}';
     // Cria o objeto TreinoRealizado com os dados do Treino
     final TreinoRealizado treinoRealizado = TreinoRealizado(
       idTreino: widget.treino.id, // ID do treino
-      nome: widget.treino.nome, // Nome do treino
+      nome: nomeTreino, // Nome do treino
       data: DateTime.now(), // Data do treino realizado
     );
 
@@ -85,6 +85,7 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
       exerciciosRealizados: itensTreinoSwtich,
     );
 
+    // ignore: use_build_context_synchronously
     showDialog<void>(
       context: context,
       barrierDismissible: false, // Impede que o usuário feche a dialog
@@ -210,7 +211,7 @@ class _ItensTreinoDetailState extends State<ItensTreinoDetail> {
                                         Text(
                                           exercicio.nome,
                                           style: const TextStyle(
-                                            fontSize: 30,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
